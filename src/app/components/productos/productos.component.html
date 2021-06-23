@@ -1,0 +1,130 @@
+<h1>Listado de Productos:</h1>
+
+<button type="button" class="btn btn-primary" *ngIf="AccionABMC == 'L'" (click)="Agregar()">
+  <span class="fas fa-plus"> </span>Agregar
+</button>
+
+<!-- Listado de Productos -->
+<div id="divTablaResultados" *ngIf="AccionABMC == 'L' &&  productosArray?.length > 0">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th class="text-center">Nombre</th>
+        <th class="text-center">Stock</th>
+        <th class="text-center">Fecha de Alta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let producto of productosArray">
+        <td>{{producto.ProductoNombre | uppercase}}</td>
+        <td class="text-right">{{producto.ProductoStock}}</td>
+        <td class="text-center">
+          {{producto.ProductoFechaAlta| date:'dd/MM/yyyy'}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Registro en Alta,Modificacion o Consulta -->
+<form name="FormAlta" *ngIf="AccionABMC != 'L'" [formGroup]="FormAlta">
+<fieldset [disabled]="AccionABMC==='C'">
+  <!--campo nombre-->
+  <div class="form-group row">
+    <label class="col-form-label col-sm-2 offset-sm-2" for="Nombre">
+      Nombre <span class="text-danger">*</span>
+    </label>
+    <div class="col-sm-6">
+      <input
+        type="text"
+        class="form-control text-uppercase"
+        formControlName="Nombre"
+        [ngClass]="{'is-invalid':(FormAlta.controls.Nombre.touched || submitted) && FormAlta.controls.Nombre.errors}"
+      />
+      <span
+        class="text-danger"
+        *ngIf="(FormAlta.controls.Nombre.touched || submitted) && FormAlta.controls.Nombre.errors && FormAlta.controls.Nombre.errors.required "
+      >
+        Dato requerido
+      </span>
+      <span
+        class="text-danger"
+        *ngIf="(FormAlta.controls.Nombre.touched || submitted) && (FormAlta.controls.Nombre.errors?.minlength || FormAlta.controls.Nombre.errors?.maxlength)"
+        >Dato texto de 5 a 50 caracteres</span
+      >
+    </div>
+  </div>
+
+  <!--campo stock-->
+  <div class="form-group row">
+    <label class="col-form-label col-sm-2 offset-sm-2" for="Stock">
+      Stock <span class="text-danger">*</span>
+    </label>
+    <div class="col-sm-6">
+      <input
+        type="text"
+        name="Stock"
+        class="form-control"
+        formControlName="Stock"
+        [ngClass]="{'is-invalid': (FormAlta.controls.Stock.touched || submitted)  && FormAlta.controls.Stock.errors}"
+      />
+      <span
+        class="text-danger"
+        *ngIf="(FormAlta.controls.Nombre.touched || submitted) && FormAlta.controls.Stock.errors && FormAlta.controls.Stock.errors.required "
+      >
+        Dato requerido
+      </span>
+      <span
+        class="text-danger"
+        *ngIf="(FormAlta.controls.Nombre.touched || submitted) && FormAlta.controls.Stock.errors?.pattern"
+      >
+        Dato numérico, 1 a 10 dígitos.
+      </span>
+    </div>
+  </div>
+
+  <!--campo fechaalta-->
+  <div class="form-group row">
+    <label class="col-form-label col-sm-2 offset-sm-2">
+      Fecha de alta <span class="text-danger">*</span>
+    </label>
+    <div class="col-sm-6">
+      <input
+        class="form-control"
+        name="FechaAlta"
+        formControlName="FechaAlta"
+        [ngClass]="{'is-invalid': (FormAlta.controls.FechaAlta.touched || submitted)  && FormAlta.controls.FechaAlta.errors}"
+      />
+      <span
+        class="text-danger"
+        *ngIf="(FormAlta.controls.Nombre.touched || submitted) && FormAlta.controls.FechaAlta.errors && FormAlta.controls.FechaAlta.errors.required "
+      >
+        Dato requerido
+      </span>
+      <span
+        class="text-danger"
+        *ngIf="(FormAlta.controls.Nombre.touched || submitted) && FormAlta.controls.FechaAlta.errors?.pattern"
+      >
+        Dato fecha, formato dd/mm/aaaa.
+      </span>
+    </div>
+  </div>
+</fieldset>
+</form>
+
+<!-- Botones Grabar, Cancelar/Volver' -->
+<div class="row justify-content-center">
+<button
+  type="button"
+  class="btn btn-primary"
+  (click)="Grabar()"
+  *ngIf=" AccionABMC == 'A'  || AccionABMC == 'M' "
+>
+  <span class="fas fa-check"></span> Grabar
+</button>
+&nbsp;
+<button type="button" class="btn btn-warning" (click)="Cancelar()">
+  <span class="fas fa-undo"></span>
+  {{AccionABMC == 'A' || AccionABMC == 'M' ? 'Cancelar' : 'Cancelar'}}
+</button>
+</div>
